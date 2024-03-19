@@ -65,8 +65,7 @@ module.exports = {
       { populate: ["user"] }
     );
     if (!comment) return ctx.badRequest("Comment not found");
-    if (comment.user.id !== user.id)
-      return ctx.badRequest("You are not the creator of this comment");
+    if (comment.user.id !== user.id)  return ctx.badRequest("You are not the creator of this comment");
     await strapi.entityService.delete("api::comment.comment", id);
     return ctx.send({ data: comment });
   },

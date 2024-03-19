@@ -116,10 +116,10 @@ module.exports = {
           },
         },
       });
-      if (post.creator.id !== user.id)
+      if (post?.creator?.id !== user?.id)
         return ctx.badRequest("You can't delete this post");
       await strapi.entityService.delete("api::post.post", id);
-      return ctx.send({ data: "success" });
+      return ctx.send({ data: { massage: "success" } });
     } catch (error) {
       return ctx.badRequest(error);
     }
