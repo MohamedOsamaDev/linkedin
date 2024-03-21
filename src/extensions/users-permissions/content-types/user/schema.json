@@ -65,7 +65,7 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "image": {
+    "profile_picture": {
       "type": "media",
       "multiple": false,
       "required": false,
