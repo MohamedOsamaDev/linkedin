@@ -1,17 +1,18 @@
 module.exports = {
-  createpost: async (ctx, next) => {
+  createpost: async (ctx) => {
     try {
       const { user } = ctx.state;
       const { text } = ctx.request.body;
       const { media } = ctx.request.files;
-      const uploadedFile = await strapi
-        .service("plugin::upload.upload")
-        .upload({
+      let uploadedFile = [];
+      if (media) {
+        uploadedFile = await strapi.service("plugin::upload.upload").upload({
           data: {
             fileInfo: { caption: "", alternativeText: "", name: "" },
           },
           files: media,
         });
+      }
       const post = await strapi.entityService.create("api::post.post", {
         data: {
           text,
