@@ -22,7 +22,7 @@ module.exports = {
         populate: {
           creator: {
             fields: ["username"],
-            populate: { image: { fields: ["url"] } },
+            populate: { profile_picture: { fields: ["url"] } },
           },
           media: {
             fields: ["url"],
@@ -42,7 +42,7 @@ module.exports = {
         populate: {
           creator: {
             fields: ["username"],
-            populate: { image: { fields: ["url"] } },
+            populate: { profile_picture: { fields: ["url"] } },
           },
           media: {
             fields: ["url"],
@@ -61,7 +61,7 @@ module.exports = {
         populate: {
           creator: {
             fields: ["username"],
-            populate: { image: { fields: ["url"] } },
+            populate: { profile_picture: { fields: ["url"] } },
           },
         },
       });
