@@ -13,6 +13,7 @@
     "@strapi/plugin-cloud": "4.20.5",
     "@strapi/plugin-i18n": "4.20.5",
     "@strapi/plugin-users-permissions": "4.20.5",
+    "@strapi/provider-upload-cloudinary": "^4.21.0",
     "@strapi/strapi": "4.20.5",
     "better-sqlite3": "8.6.0",
     "multer": "^1.4.5-lts.1",
