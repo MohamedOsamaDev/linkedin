@@ -48,10 +48,21 @@ module.exports = {
   getlikes: async (ctx) => {
     try {
       const { id } = ctx.params;
+      let page =
+        ctx?.request?.query?.page < 1 ? 1 : ctx?.request?.query?.page * 1 || 1;
       const likes = await strapi.entityService.findPage("api::like.like", {
-        page: ctx?.request?.query?.page * 1 || 1,
+        page,
         pageSize: 15,
         filters: { post: id },
+        populate: {
+          user: {
+            fields: ["username"],
+            populate: { profile_picture: { fields: ["url"] } },
+          },
+          media: {
+            fields: ["url"],
+          },
+        },
       });
       return ctx.send({ data: likes });
     } catch (error) {
