@@ -56,8 +56,8 @@ module.exports = {
         filters: { post: id },
         populate: {
           user: {
-            fields: ["username"],
-            populate: { profile_picture: { fields: ["url"] } },
+            fields: ["fullName", "title"],
+            populate: { profilePic: { fields: ["url"] } },
           },
           media: {
             fields: ["url"],

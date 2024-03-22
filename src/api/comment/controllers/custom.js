@@ -7,8 +7,17 @@ module.exports = {
     const comment = await strapi.entityService.create("api::comment.comment", {
       data: {
         text,
-        creator: user.id,
+        user: user.id,
         post: postId,
+      },
+      populate: {
+        user: {
+          fields: ["fullName", "title"],
+          populate: { profilePic: { fields: ["url"] } },
+        },
+        media: {
+          fields: ["url"],
+        },
       },
     });
     return ctx.send({ data: comment });
@@ -28,8 +37,8 @@ module.exports = {
         pageSize: 15,
         populate: {
           user: {
-            fields: ["username"],
-            populate: { profile_picture: { fields: ["url"] } },
+            fields: ["fullName", "title"],
+            populate: { profilePic: { fields: ["url"] } },
           },
           media: {
             fields: ["url"],
@@ -57,6 +66,15 @@ module.exports = {
       {
         data: {
           text,
+        },
+        populate: {
+          user: {
+            fields: ["fullName", "title"],
+            populate: { profilePic: { fields: ["url"] } },
+          },
+          media: {
+            fields: ["url"],
+          },
         },
       }
     );
