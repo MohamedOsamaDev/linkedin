@@ -3,8 +3,9 @@ module.exports = (plugin) => {
   plugin.controllers.user.updateMe = async (ctx) => {
     // 1 vaildate data
     try {
-      const { email, username } = ctx.request.body;
+      const { fullName, title, email, username } = ctx.request.body;
       const { user } = ctx.state;
+      let data = { fullName, title, email, username };
       if (email || username) {
         // 2 check unique feilds
         const checkFeilds = await strapi
@@ -40,11 +41,36 @@ module.exports = (plugin) => {
         }
       }
       // 4 update data if all things is alright
+      if (ctx.request.files) {
+        const { coverPic, profilePic } = ctx.request.files;
+        if (coverPic) {
+          const coverPicupload = await strapi
+            .service("plugin::upload.upload")
+            .upload({
+              data: {
+                fileInfo: { caption: "", alternativeText: "", name: "" },
+              },
+              files: coverPic,
+            });
+          data.coverPic = coverPicupload;
+        }
+        if (profilePic) {
+          const profilePicupload = await strapi
+            .service("plugin::upload.upload")
+            .upload({
+              data: {
+                fileInfo: { caption: "", alternativeText: "", name: "" },
+              },
+              files: profilePic,
+            });
+          data.profilePic = profilePicupload;
+        }
+      }
       await strapi
         .query("plugin::users-permissions.user")
         .update({
           where: { id: user.id },
-          data: ctx.request.body,
+          data,
         })
         .then((res) => {
           return (ctx.response.status = 200);
