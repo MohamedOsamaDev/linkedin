@@ -36,7 +36,8 @@ module.exports = {
   },
   findAllPosts: async (ctx) => {
     // handle page type
-    let page = ctx?.request?.query?.page < 1 ? 1 : ctx?.request?.query?.page * 1 || 1;
+    let page =
+      ctx?.request?.query?.page < 1 ? 1 : ctx?.request?.query?.page * 1 || 1;
 
     try {
       const data = await strapi.entityService.findPage("api::post.post", {
