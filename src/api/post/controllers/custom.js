@@ -3,9 +3,9 @@ module.exports = {
     try {
       const { user } = ctx.state;
       const { text } = ctx.request.body;
-      const { media } = ctx.request.files;
       let uploadedFile = [];
-      if (media) {
+      if (ctx?.request?.files) {
+        const { media } = ctx?.request?.files;
         uploadedFile = await strapi.service("plugin::upload.upload").upload({
           data: {
             fileInfo: { caption: "", alternativeText: "", name: "" },
@@ -21,11 +21,11 @@ module.exports = {
         },
         populate: {
           creator: {
-            fields: ["username"],
-            populate: { profile_picture: { fields: ["url"] } },
+            fields: ["fullName", "title"],
+            populate: { profilePic: { fields: ["url"] } },
           },
           media: {
-            fields: ["url"],
+            fields: ["url", "mime", "provider_metadata"],
           },
         },
       });
@@ -35,21 +35,20 @@ module.exports = {
     }
   },
   findAllPosts: async (ctx) => {
-    // handle page type
-    let page =
-      ctx?.request?.query?.page < 1 ? 1 : ctx?.request?.query?.page * 1 || 1;
-
     try {
+      let page =
+        ctx?.request?.query?.page < 1 ? 1 : ctx?.request?.query?.page * 1 || 1;
+
       const data = await strapi.entityService.findPage("api::post.post", {
         page,
         pageSize: 15,
         populate: {
           creator: {
-            fields: ["username"],
-            populate: { profile_picture: { fields: ["url"] } },
+            fields: ["fullName", "title"],
+            populate: { profilePic: { fields: ["url"] } },
           },
           media: {
-            fields: ["url"],
+            fields: ["url", "mime", "provider_metadata"],
           },
         },
       });
@@ -64,8 +63,11 @@ module.exports = {
       const data = await strapi.entityService.findOne("api::post.post", id, {
         populate: {
           creator: {
-            fields: ["username"],
-            populate: { profile_picture: { fields: ["url"] } },
+            fields: ["fullName", "title"],
+            populate: { profilePic: { fields: ["url"] } },
+          },
+          media: {
+            fields: ["url", "mime", "provider_metadata"],
           },
         },
       });
@@ -82,9 +84,9 @@ module.exports = {
       if (!post) return ctx.badRequest("Post not found");
       if (post.creator.id !== ctx.state.user.id)
         return ctx.BadRequest("Invalid post");
-      const { media } = ctx.request.files;
       let mediaData = [];
-      if (media) {
+      if (ctx.request.files) {
+        const { media } = ctx.request.files;
         const uploadedFile = await strapi
           .service("plugin::upload.upload")
           .upload({
@@ -102,6 +104,15 @@ module.exports = {
           data: {
             text,
             media: mediaData,
+          },
+          populate: {
+            creator: {
+              fields: ["fullName", "title"],
+              populate: { profilePic: { fields: ["url"] } },
+            },
+            media: {
+              fields: ["url", "mime", "provider_metadata"],
+            },
           },
         }
       );
