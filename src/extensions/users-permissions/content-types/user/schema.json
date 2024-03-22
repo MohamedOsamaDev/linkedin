@@ -65,16 +65,26 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "profile_picture": {
+    "profilePic": {
       "type": "media",
       "multiple": false,
       "required": false,
       "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
+        "images"
       ]
+    },
+    "fullName": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "coverPic": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
     }
   }
 }
