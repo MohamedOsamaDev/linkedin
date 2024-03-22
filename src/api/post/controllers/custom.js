@@ -84,7 +84,7 @@ module.exports = {
       if (!post) return ctx.badRequest("Post not found");
       if (post.creator.id !== ctx.state.user.id)
         return ctx.BadRequest("Invalid post");
-      let mediaData = [];
+      let data = { text };
       if (ctx.request.files) {
         const { media } = ctx.request.files;
         const uploadedFile = await strapi
@@ -95,16 +95,16 @@ module.exports = {
             },
             files: media,
           });
-        mediaData = uploadedFile;
+        data = {
+          ...data,
+          media: uploadedFile,
+        };
       }
       const postAfterUpdated = await strapi.entityService.update(
         "api::post.post",
         id,
         {
-          data: {
-            text,
-            media: mediaData,
-          },
+          data,
           populate: {
             creator: {
               fields: ["fullName", "title"],
