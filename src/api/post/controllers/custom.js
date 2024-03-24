@@ -38,9 +38,9 @@ module.exports = {
     try {
       let page =
         ctx?.request?.query?.page < 1 ? 1 : ctx?.request?.query?.page * 1 || 1;
-
       const data = await strapi.entityService.findPage("api::post.post", {
         page,
+        sort: { id: ctx?.request?.query?.sort || "desc" },
         pageSize: 15,
         populate: {
           creator: {
@@ -82,7 +82,7 @@ module.exports = {
       const { text } = ctx.request.body;
       const post = await ctx.entityService.findOne("api::post.post", id);
       if (!post) return ctx.badRequest("Post not found");
-      if (post?.creator?.id !== ctx?.state?.user?.id)
+      if (post.creator.id !== ctx.state.user.id)
         return ctx.BadRequest("Invalid post");
       let data = { text };
       if (ctx.request.files) {
