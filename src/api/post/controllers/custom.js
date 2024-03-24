@@ -38,9 +38,9 @@ module.exports = {
     try {
       let page =
         ctx?.request?.query?.page < 1 ? 1 : ctx?.request?.query?.page * 1 || 1;
-
       const data = await strapi.entityService.findPage("api::post.post", {
         page,
+        sort: { id: ctx?.request?.query?.sort || "desc" },
         pageSize: 15,
         populate: {
           creator: {
