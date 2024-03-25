@@ -29,13 +29,15 @@ module.exports = {
     try {
       const { user } = ctx.state;
       const { id } = ctx.request.params;
-      const like = await strapi.entityService.findOne("api::like.like", id, {
-        populate: ["user", "post"],
+      const like = await strapi.db.query("api::like.like").findOne({
+        where: {
+          post: id,
+          user: user.id,
+        },
       });
       if (!like) return ctx.notFound("like not found");
-      if (like?.user?.id !== user?.id) return ctx.unauthorized("unauthorized");
-      await strapi.entityService.delete("api::like.like", id);
-      await strapi.entityService.update("api::post.post", like.post.id, {
+      await strapi.entityService.delete("api::like.like", like?.id);
+      await strapi.entityService.update("api::post.post", id, {
         data: {
           likes: +like.post.likes - 1 < 0 ? 0 : +like.post.likes - 1,
         },
