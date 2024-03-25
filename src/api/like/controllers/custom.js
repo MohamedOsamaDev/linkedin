@@ -34,6 +34,7 @@ module.exports = {
           post: id,
           user: user.id,
         },
+        populate: true,
       });
       if (!like) return ctx.notFound("like not found");
       await strapi.entityService.delete("api::like.like", like?.id);
