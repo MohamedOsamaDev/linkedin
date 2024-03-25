@@ -21,7 +21,7 @@ module.exports = {
         },
         populate: {
           creator: {
-            fields: ["fullName", "title"],
+            fields: ["fullName", "title", "username"],
             populate: { profilePic: { fields: ["url"] } },
           },
           media: {
@@ -44,7 +44,7 @@ module.exports = {
         pageSize: 15,
         populate: {
           creator: {
-            fields: ["fullName", "title"],
+            fields: ["fullName", "title", "username"],
             populate: { profilePic: { fields: ["url"] } },
           },
           media: {
@@ -63,7 +63,7 @@ module.exports = {
       const data = await strapi.entityService.findOne("api::post.post", id, {
         populate: {
           creator: {
-            fields: ["fullName", "title"],
+            fields: ["fullName", "title", "username"],
             populate: { profilePic: { fields: ["url"] } },
           },
           media: {
@@ -107,7 +107,7 @@ module.exports = {
           data,
           populate: {
             creator: {
-              fields: ["fullName", "title"],
+              fields: ["fullName", "title", "username"],
               populate: { profilePic: { fields: ["url"] } },
             },
             media: {
