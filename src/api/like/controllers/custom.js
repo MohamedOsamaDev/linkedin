@@ -7,7 +7,7 @@ module.exports = {
       if (!post) return ctx.notFound("post not found");
       const isLikedBefore = await strapi.db
         .query("api::like.like")
-        .findOne({ where: { user: user.id } });
+        .findOne({ where: { user: user.id, post: id } });
       if (isLikedBefore) return ctx.badRequest("already liked");
       const data = await strapi.entityService.create("api::like.like", {
         data: {
