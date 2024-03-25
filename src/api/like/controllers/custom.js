@@ -2,8 +2,8 @@ module.exports = {
   addLike: async (ctx) => {
     try {
       const { user } = ctx.state;
-      const { postId } = ctx.request.body;
-      const post = await strapi.entityService.findOne("api::post.post", postId);
+      const { id } = ctx.request.params;
+      const post = await strapi.entityService.findOne("api::post.post", id);
       if (!post) return ctx.notFound("post not found");
       const isLikedBefore = await strapi.db
         .query("api::like.like")
@@ -12,7 +12,7 @@ module.exports = {
       const data = await strapi.entityService.create("api::like.like", {
         data: {
           user: user.id,
-          post: postId,
+          post: id,
         },
       });
       await strapi.entityService.update("api::post.post", post.id, {

@@ -7,7 +7,7 @@ module.exports = {
     },
     {
       method: "POST",
-      path: "/add-like",
+      path: "/add-like/:id",
       handler: "custom.addLike",
     },
     {
