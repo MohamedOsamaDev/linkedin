@@ -413,12 +413,12 @@ export interface ApiLikeLike extends Schema.CollectionType {
     draftAndPublish: false;
   };
   attributes: {
-    post: Attribute.Relation<'api::like.like', 'oneToOne', 'api::post.post'>;
     user: Attribute.Relation<
       'api::like.like',
       'oneToOne',
       'plugin::users-permissions.user'
     >;
+    post: Attribute.Relation<'api::like.like', 'manyToOne', 'api::post.post'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::like.like', 'oneToOne', 'admin::user'> &
@@ -448,6 +448,11 @@ export interface ApiPostPost extends Schema.CollectionType {
     >;
     likes: Attribute.Integer & Attribute.DefaultTo<0>;
     media: Attribute.Media;
+    isLiked: Attribute.Relation<
+      'api::post.post',
+      'oneToMany',
+      'api::like.like'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::post.post', 'oneToOne', 'admin::user'> &

@@ -36,6 +36,7 @@ module.exports = {
   },
   findAllPosts: async (ctx) => {
     try {
+      const { user } = ctx.state;
       let page =
         ctx?.request?.query?.page < 1 ? 1 : ctx?.request?.query?.page * 1 || 1;
       const data = await strapi.entityService.findPage("api::post.post", {
@@ -50,7 +51,12 @@ module.exports = {
           media: {
             fields: ["url", "mime", "provider_metadata"],
           },
+          isLiked: { filters: { user: user.id } },
         },
+      });
+      data.results.forEach((post) => {
+        // @ts-ignore
+        post.isLiked = post.isLiked.length !== 0;
       });
       return ctx.send({ data });
     } catch (error) {

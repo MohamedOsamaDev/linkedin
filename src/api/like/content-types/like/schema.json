@@ -12,15 +12,16 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "post": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::post.post"
-    },
     "user": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user"
+    },
+    "post": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::post.post",
+      "inversedBy": "isLiked"
     }
   }
 }

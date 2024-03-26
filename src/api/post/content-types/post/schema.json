@@ -33,6 +33,12 @@
         "images",
         "videos"
       ]
+    },
+    "isLiked": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::like.like",
+      "mappedBy": "post"
     }
   }
 }
