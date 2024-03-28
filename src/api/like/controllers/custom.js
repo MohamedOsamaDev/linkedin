@@ -59,7 +59,7 @@ module.exports = {
         filters: { post: id },
         populate: {
           user: {
-            fields: ["fullName", "title"],
+            fields: ["fullName", "title", "username"],
             populate: { profilePic: { fields: ["url"] } },
           },
           media: {
