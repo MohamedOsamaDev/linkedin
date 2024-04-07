@@ -127,11 +127,15 @@ module.exports = {
         "api::connection-request.connection-request",
         id
       );
-     
+
       const addToConnectionList = await strapi.entityService.create(
         "api::connection.connection",
         {
-          data: { user_1: isExist?.from?.id, user_2: user.id },
+          data: {
+            user_1: isExist?.from?.id,
+            user_2: user.id,
+            users: [isExist?.from?.id, user.id],
+          },
         }
       );
       return ctx.send({ data: addToConnectionList });

@@ -89,8 +89,9 @@
     },
     "connections": {
       "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::connection.connection"
+      "relation": "manyToMany",
+      "target": "api::connection.connection",
+      "mappedBy": "users"
     }
   }
 }

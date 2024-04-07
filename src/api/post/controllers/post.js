@@ -1,164 +1,161 @@
 module.exports = {
-    createpost: async (ctx) => {
-        try {
-            const { user } = ctx.state;
-            const { text } = ctx.request.body;
-            let uploadedFile = [];
-            if (ctx?.request?.files) {
-                const { media } = ctx?.request?.files;
-                uploadedFile = await strapi.service("plugin::upload.upload").upload({
-                    data: {
-                        fileInfo: { caption: "", alternativeText: "", name: "" },
-                    },
-                    files: media,
-                });
-            }
-            const post = await strapi.entityService.create("api::post.post", {
-                data: {
-                    text,
-                    creator: user.id,
-                    media: uploadedFile,
+  createpost: async (ctx) => {
+    try {
+      const { user } = ctx.state;
+      const { text } = ctx.request.body;
+      let uploadedFile = [];
+      if (ctx?.request?.files) {
+        const { media } = ctx?.request?.files;
+        uploadedFile = await strapi.service("plugin::upload.upload").upload({
+          data: {
+            fileInfo: { caption: "", alternativeText: "", name: "" },
+          },
+          files: media,
+        });
+      }
+      const post = await strapi.entityService.create("api::post.post", {
+        data: {
+          text,
+          creator: user.id,
+          media: uploadedFile,
+        },
+        populate: {
+          creator: {
+            fields: ["fullName", "title", "username"],
+            populate: { profilePic: { fields: ["url"] } },
+          },
+          media: {
+            fields: ["url", "mime", "provider_metadata"],
+          },
+        },
+      });
+      return ctx.send({ data: post });
+    } catch (error) {
+      return ctx.badRequest(error);
+    }
+  },
+  findAllPosts: async (ctx) => {
+    try {
+      const { user } = ctx.state;
+      let page =
+        ctx?.request?.query?.page < 1 ? 1 : ctx?.request?.query?.page * 1 || 1;
+      const data = await strapi.entityService.findPage("api::post.post", {
+        page,
+        sort: { id: ctx?.request?.query?.sort || "desc" },
+        pageSize: 15,
+        populate: {
+          creator: {
+            fields: ["fullName", "title", "username"],
+            populate: { profilePic: { fields: ["url"] } },
+          },
+          media: {
+            fields: ["url", "mime", "provider_metadata"],
+          },
+          isLiked: { filters: { user: user.id } },
+          related_comments: {
+            filters: {
+              user: {
+                connections: {
+                  $or: [
+                    { user_1: { id: user.id } },
+                    { user_2: { id: user.id } },
+                  ],
                 },
-                populate: {
-                    creator: {
-                        fields: ["fullName", "title", "username"],
-                        populate: { profilePic: { fields: ["url"] } },
-                    },
-                    media: {
-                        fields: ["url", "mime", "provider_metadata"],
-                    },
-                },
-            });
-            return ctx.send({ data: post });
-        } catch (error) {
-            return ctx.badRequest(error);
+              },
+            },
+          },
+        },
+      });
+      data.results.forEach((post) => {
+        // @ts-ignore
+        post.isLiked = post.isLiked.length !== 0;
+      });
+      return ctx.send({ data });
+    } catch (error) {
+      return ctx.badRequest(error);
+    }
+  },
+  findOnePost: async (ctx) => {
+    try {
+      const { id } = ctx.params;
+      const data = await strapi.entityService.findOne("api::post.post", id, {
+        populate: {
+          creator: {
+            fields: ["fullName", "title", "username"],
+            populate: { profilePic: { fields: ["url"] } },
+          },
+          media: {
+            fields: ["url", "mime", "provider_metadata"],
+          },
+        },
+      });
+      return ctx.send({ data });
+    } catch (error) {
+      return ctx.badRequest(error);
+    }
+  },
+  updatePost: async (ctx) => {
+    try {
+      const { id } = ctx.params;
+      const { text } = ctx.request.body;
+      const post = await ctx.entityService.findOne("api::post.post", id);
+      if (!post) return ctx.badRequest("Post not found");
+      if (post.creator.id !== ctx.state.user.id)
+        return ctx.BadRequest("Invalid post");
+      let data = { text };
+      if (ctx.request.files) {
+        const { media } = ctx.request.files;
+        const uploadedFile = await strapi
+          .service("plugin::upload.upload")
+          .upload({
+            data: {
+              fileInfo: { caption: "", alternativeText: "", name: "" },
+            },
+            files: media,
+          });
+        data = {
+          ...data,
+          media: uploadedFile,
+        };
+      }
+      const postAfterUpdated = await strapi.entityService.update(
+        "api::post.post",
+        id,
+        {
+          data,
+          populate: {
+            creator: {
+              fields: ["fullName", "title", "username"],
+              populate: { profilePic: { fields: ["url"] } },
+            },
+            media: {
+              fields: ["url", "mime", "provider_metadata"],
+            },
+          },
         }
-    },
-    findAllPosts: async (ctx) => {
-        try {
-            const { user } = ctx.state;
-            let page =
-                ctx?.request?.query?.page < 1 ? 1 : ctx?.request?.query?.page * 1 || 1;
-            const data = await strapi.entityService.findPage("api::post.post", {
-                page,
-                sort: { id: ctx?.request?.query?.sort || "desc" },
-                pageSize: 15,
-                populate: {
-                    creator: {
-                        fields: ["fullName", "title", "username"],
-                        populate: { profilePic: { fields: ["url"] } },
-                    },
-                    media: {
-                        fields: ["url", "mime", "provider_metadata"],
-                    },
-                    isLiked: { filters: { user: user.id } },
-                    related_comments: {
-                        filters: {
-                            user: {
-                                connections: {
-                                    $or: [
-                                        { user_1: user.id },
-                                        {
-                                            user_2: user.id,
-                                        },
-                                    ],
-                                },
-                            },
-                        },
-                        limit: 4,
-                    },
-                },
-            });
-            data.results.forEach((post) => {
-                // @ts-ignore
-                post.isLiked = post.isLiked.length !== 0;
-            });
-            return ctx.send({ data });
-        } catch (error) {
-            return ctx.badRequest(error);
-        }
-    },
-    findOnePost: async (ctx) => {
-        try {
-            const { id } = ctx.params;
-            const data = await strapi.entityService.findOne("api::post.post", id, {
-                populate: {
-                    creator: {
-                        fields: ["fullName", "title", "username"],
-                        populate: { profilePic: { fields: ["url"] } },
-                    },
-                    media: {
-                        fields: ["url", "mime", "provider_metadata"],
-                    },
-                },
-            });
-            return ctx.send({ data });
-        } catch (error) {
-            return ctx.badRequest(error);
-        }
-    },
-    updatePost: async (ctx) => {
-        try {
-            const { id } = ctx.params;
-            const { text } = ctx.request.body;
-            const post = await ctx.entityService.findOne("api::post.post", id);
-            if (!post) return ctx.badRequest("Post not found");
-            if (post.creator.id !== ctx.state.user.id)
-                return ctx.BadRequest("Invalid post");
-            let data = { text };
-            if (ctx.request.files) {
-                const { media } = ctx.request.files;
-                const uploadedFile = await strapi
-                    .service("plugin::upload.upload")
-                    .upload({
-                        data: {
-                            fileInfo: { caption: "", alternativeText: "", name: "" },
-                        },
-                        files: media,
-                    });
-                data = {
-                    ...data,
-                    media: uploadedFile,
-                };
-            }
-            const postAfterUpdated = await strapi.entityService.update(
-                "api::post.post",
-                id,
-                {
-                    data,
-                    populate: {
-                        creator: {
-                            fields: ["fullName", "title", "username"],
-                            populate: { profilePic: { fields: ["url"] } },
-                        },
-                        media: {
-                            fields: ["url", "mime", "provider_metadata"],
-                        },
-                    },
-                }
-            );
-            return ctx.send({ data: postAfterUpdated });
-        } catch (error) {
-            return ctx.badRequest(error);
-        }
-    },
-    deletePost: async (ctx) => {
-        try {
-            const { user } = ctx.state;
-            const { id } = ctx.params;
-            const post = await strapi.entityService.findOne("api::post.post", id, {
-                populate: {
-                    creator: {
-                        fields: ["id"],
-                    },
-                },
-            });
-            if (post?.creator?.id !== user?.id)
-                return ctx.badRequest("You can't delete this post");
-            await strapi.entityService.delete("api::post.post", id);
-            return ctx.send({ data: { massage: "success" } });
-        } catch (error) {
-            return ctx.badRequest(error);
-        }
-    },
+      );
+      return ctx.send({ data: postAfterUpdated });
+    } catch (error) {
+      return ctx.badRequest(error);
+    }
+  },
+  deletePost: async (ctx) => {
+    try {
+      const { user } = ctx.state;
+      const { id } = ctx.params;
+      const post = await strapi.entityService.findOne("api::post.post", id, {
+        populate: {
+          creator: {
+            fields: ["id"],
+          },
+        },
+      });
+      if (post?.creator?.id !== user?.id)
+        return ctx.badRequest("You can't delete this post");
+      await strapi.entityService.delete("api::post.post", id);
+      return ctx.send({ data: { massage: "success" } });
+    } catch (error) {
+      return ctx.badRequest(error);
+    }
+  },
 };

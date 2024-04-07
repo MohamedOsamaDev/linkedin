@@ -776,7 +776,7 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     coverPic: Attribute.Media;
     connections: Attribute.Relation<
       'plugin::users-permissions.user',
-      'oneToMany',
+      'manyToMany',
       'api::connection.connection'
     >;
     createdAt: Attribute.DateTime;
@@ -854,6 +854,11 @@ export interface ApiCommentComment extends Schema.CollectionType {
       'oneToOne',
       'plugin::users-permissions.user'
     >;
+    post: Attribute.Relation<
+      'api::comment.comment',
+      'manyToOne',
+      'api::post.post'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -891,6 +896,11 @@ export interface ApiConnectionConnection extends Schema.CollectionType {
     user_2: Attribute.Relation<
       'api::connection.connection',
       'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    users: Attribute.Relation<
+      'api::connection.connection',
+      'manyToMany',
       'plugin::users-permissions.user'
     >;
     createdAt: Attribute.DateTime;
@@ -1011,6 +1021,11 @@ export interface ApiPostPost extends Schema.CollectionType {
         string
       > &
       Attribute.DefaultTo<'0'>;
+    related_comments: Attribute.Relation<
+      'api::post.post',
+      'oneToMany',
+      'api::comment.comment'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::post.post', 'oneToOne', 'admin::user'> &

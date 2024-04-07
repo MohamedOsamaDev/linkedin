@@ -26,10 +26,27 @@ module.exports = {
       const isBlockedBefore = await strapi.db
         .query("api::block-list.block-list")
         .findOne({
-          where: { from: user.id, to },
+          where: {
+            $or: [
+              { from: to, to: user.id },
+              { from: user.id, to },
+            ],
+          },
+          populate: {
+            from: {
+              fields: ["id"],
+            },
+            to: {
+              fields: ["id"],
+            },
+          },
         });
 
-      if (isBlockedBefore) {
+      if (isBlockedBefore && isBlockedBefore.to.id === user.id) {
+        return ctx.badRequest("user not found");
+      }
+
+      if (isBlockedBefore && isBlockedBefore.from.id === user.id) {
         return ctx.badRequest("Already Blocked");
       }
       const newBlock = await strapi.entityService.create(
@@ -65,7 +82,7 @@ module.exports = {
         );
       }
       const oldConnectionRequest = await strapi.db
-        .query("api::connection.connection")
+        .query("api::connection-request.connection-request")
         .findOne({
           where: {
             $or: [
@@ -99,7 +116,7 @@ module.exports = {
   removeBlock: async (ctx) => {
     try {
       const { user } = ctx.state;
-      const { id } = ctx.request.param;
+      const { id } = ctx.request.params;
       const findIsBlocked = await strapi.entityService.findOne(
         "api::block-list.block-list",
         id,
@@ -114,8 +131,8 @@ module.exports = {
           },
         }
       );
-      if (!findIsBlocked) {
-        return ctx.badRequest({ message: "Not Blocked" });
+      if (!findIsBlocked || findIsBlocked.from.id !== user.id) {
+        return ctx.badRequest("user not found");
       }
       if (
         findIsBlocked.from.id !== user.id &&
@@ -124,6 +141,11 @@ module.exports = {
         return ctx.badRequest({ message: "Not Blocked" });
       }
       await strapi.entityService.delete("api::block-list.block-list", id);
+      return ctx.send({
+        data: {
+          message: "Successfully UnBlocked",
+        },
+      });
     } catch (error) {
       return ctx.badRequest(error);
     }
