@@ -12,6 +12,12 @@ module.exports = {
           filters: {
             from: user.id,
           },
+          populate: {
+            to: {
+              fields: ["fullName", "title", "username"],
+              populate: { profilePic: { fields: ["url"] } },
+            },
+          },
         }
       );
       return ctx.send({ data });
@@ -33,6 +39,12 @@ module.exports = {
           filters: {
             to: user.id,
           },
+          populate: {
+            from: {
+              fields: ["fullName", "title", "username"],
+              populate: { profilePic: { fields: ["url"] } },
+            },
+          },
         }
       );
       return ctx.send({ data });
@@ -44,6 +56,7 @@ module.exports = {
   requestForConnection: async (ctx) => {
     try {
       const { to } = ctx.request.body;
+      console.log("🚀 ~ requestForConnection: ~ to:", to);
       const { user } = ctx.state;
 
       const isBlocked = await strapi.db
@@ -51,8 +64,8 @@ module.exports = {
         .findOne({
           where: {
             $or: [
-              { user_1: user.id, user_2: to },
-              { user_1: to, user_2: user.id },
+              { from: user.id, to },
+              { from: to, to: user.id },
             ],
           },
         });
@@ -93,7 +106,7 @@ module.exports = {
   },
   acceptConnection: async (ctx) => {
     try {
-      const { id } = ctx.request.param;
+      const { id } = ctx.request.params;
       const { user } = ctx.state;
       const isExist = await strapi.db
         .query("api::connection-request.connection-request")
@@ -105,6 +118,7 @@ module.exports = {
             },
           },
         });
+      console.log(isExist);
       if (!isExist)
         return ctx.badRequest(
           "this connection is not found or Unauthorized for you"
@@ -113,6 +127,7 @@ module.exports = {
         "api::connection-request.connection-request",
         id
       );
+      console.log({ user_1: isExist?.from?.id, user_2: user.id });
       const addToConnectionList = await strapi.entityService.create(
         "api::connection.connection",
         {

@@ -33,9 +33,7 @@ module.exports = {
     const { postId } = ctx.params;
     let page =
       ctx?.request?.query?.page < 1 ? 1 : ctx?.request?.query?.page * 1 || 1;
-    const post = await strapi.entityService.findOne("api::post.post", postId);
 
-    if (!post) return ctx.badRequest("Post not found");
     const comments = await strapi.entityService.findPage(
       "api::comment.comment",
       {

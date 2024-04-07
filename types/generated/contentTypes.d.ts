@@ -888,9 +888,10 @@ export interface ApiConnectionConnection extends Schema.CollectionType {
     singularName: 'connection';
     pluralName: 'connections';
     displayName: 'connection';
+    description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     user_1: Attribute.Relation<
@@ -905,7 +906,6 @@ export interface ApiConnectionConnection extends Schema.CollectionType {
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'api::connection.connection',
       'oneToOne',
@@ -931,7 +931,7 @@ export interface ApiConnectionRequestConnectionRequest
     description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     from: Attribute.Relation<
@@ -947,7 +947,6 @@ export interface ApiConnectionRequestConnectionRequest
     status: Attribute.Enumeration<['pending', 'accepted', 'cancled']>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'api::connection-request.connection-request',
       'oneToOne',
