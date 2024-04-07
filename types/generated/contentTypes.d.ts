@@ -362,106 +362,6 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
   };
 }
 
-export interface ApiCommentComment extends Schema.CollectionType {
-  collectionName: 'comments';
-  info: {
-    singularName: 'comment';
-    pluralName: 'comments';
-    displayName: 'comment';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    text: Attribute.Text & Attribute.Required;
-    post: Attribute.Relation<
-      'api::comment.comment',
-      'oneToOne',
-      'api::post.post'
-    >;
-    user: Attribute.Relation<
-      'api::comment.comment',
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::comment.comment',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::comment.comment',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiLikeLike extends Schema.CollectionType {
-  collectionName: 'likes';
-  info: {
-    singularName: 'like';
-    pluralName: 'likes';
-    displayName: 'like';
-    description: '';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    user: Attribute.Relation<
-      'api::like.like',
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
-    post: Attribute.Relation<'api::like.like', 'manyToOne', 'api::post.post'>;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'api::like.like', 'oneToOne', 'admin::user'> &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<'api::like.like', 'oneToOne', 'admin::user'> &
-      Attribute.Private;
-  };
-}
-
-export interface ApiPostPost extends Schema.CollectionType {
-  collectionName: 'posts';
-  info: {
-    singularName: 'post';
-    pluralName: 'posts';
-    displayName: 'post';
-    description: '';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    text: Attribute.Text;
-    creator: Attribute.Relation<
-      'api::post.post',
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
-    likes: Attribute.Integer & Attribute.DefaultTo<0>;
-    media: Attribute.Media;
-    isLiked: Attribute.Relation<
-      'api::post.post',
-      'oneToMany',
-      'api::like.like'
-    >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'api::post.post', 'oneToOne', 'admin::user'> &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<'api::post.post', 'oneToOne', 'admin::user'> &
-      Attribute.Private;
-  };
-}
-
 export interface PluginUploadFile extends Schema.CollectionType {
   collectionName: 'files';
   info: {
@@ -874,6 +774,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     fullName: Attribute.String;
     title: Attribute.String;
     coverPic: Attribute.Media;
+    connections: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::connection.connection'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -891,6 +796,247 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
 }
 
+export interface ApiBlockListBlockList extends Schema.CollectionType {
+  collectionName: 'block_lists';
+  info: {
+    singularName: 'block-list';
+    pluralName: 'block-lists';
+    displayName: 'block_list';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    from: Attribute.Relation<
+      'api::block-list.block-list',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    to: Attribute.Relation<
+      'api::block-list.block-list',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    isblocked: Attribute.Boolean & Attribute.DefaultTo<true>;
+    post: Attribute.Relation<
+      'api::block-list.block-list',
+      'manyToOne',
+      'api::post.post'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::block-list.block-list',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::block-list.block-list',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiCommentComment extends Schema.CollectionType {
+  collectionName: 'comments';
+  info: {
+    singularName: 'comment';
+    pluralName: 'comments';
+    displayName: 'comment';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    text: Attribute.Text & Attribute.Required;
+    user: Attribute.Relation<
+      'api::comment.comment',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    post: Attribute.Relation<
+      'api::comment.comment',
+      'manyToOne',
+      'api::post.post'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::comment.comment',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::comment.comment',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiConnectionConnection extends Schema.CollectionType {
+  collectionName: 'connections';
+  info: {
+    singularName: 'connection';
+    pluralName: 'connections';
+    displayName: 'connection';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    user_1: Attribute.Relation<
+      'api::connection.connection',
+      'oneToOne',
+      'api::block-list.block-list'
+    >;
+    user_2: Attribute.Relation<
+      'api::connection.connection',
+      'oneToOne',
+      'api::block-list.block-list'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::connection.connection',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::connection.connection',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiConnectionRequestConnectionRequest
+  extends Schema.CollectionType {
+  collectionName: 'connection_requests';
+  info: {
+    singularName: 'connection-request';
+    pluralName: 'connection-requests';
+    displayName: 'connection_Request';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    from: Attribute.Relation<
+      'api::connection-request.connection-request',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    to: Attribute.Relation<
+      'api::connection-request.connection-request',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    status: Attribute.Enumeration<['pending', 'accepted', 'cancled']>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::connection-request.connection-request',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::connection-request.connection-request',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiLikeLike extends Schema.CollectionType {
+  collectionName: 'likes';
+  info: {
+    singularName: 'like';
+    pluralName: 'likes';
+    displayName: 'like';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    user: Attribute.Relation<
+      'api::like.like',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    post: Attribute.Relation<'api::like.like', 'manyToOne', 'api::post.post'>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::like.like', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::like.like', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiPostPost extends Schema.CollectionType {
+  collectionName: 'posts';
+  info: {
+    singularName: 'post';
+    pluralName: 'posts';
+    displayName: 'post';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    text: Attribute.Text;
+    creator: Attribute.Relation<
+      'api::post.post',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    likes: Attribute.Integer & Attribute.DefaultTo<0>;
+    media: Attribute.Media;
+    isLiked: Attribute.Relation<
+      'api::post.post',
+      'oneToMany',
+      'api::like.like'
+    >;
+    related_comments: Attribute.Relation<
+      'api::post.post',
+      'oneToMany',
+      'api::comment.comment'
+    >;
+    comments: Attribute.BigInteger &
+      Attribute.SetMinMax<
+        {
+          min: '0';
+        },
+        string
+      > &
+      Attribute.DefaultTo<'0'>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::post.post', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::post.post', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -901,9 +1047,6 @@ declare module '@strapi/types' {
       'admin::api-token-permission': AdminApiTokenPermission;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
-      'api::comment.comment': ApiCommentComment;
-      'api::like.like': ApiLikeLike;
-      'api::post.post': ApiPostPost;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::content-releases.release': PluginContentReleasesRelease;
@@ -912,6 +1055,12 @@ declare module '@strapi/types' {
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
+      'api::block-list.block-list': ApiBlockListBlockList;
+      'api::comment.comment': ApiCommentComment;
+      'api::connection.connection': ApiConnectionConnection;
+      'api::connection-request.connection-request': ApiConnectionRequestConnectionRequest;
+      'api::like.like': ApiLikeLike;
+      'api::post.post': ApiPostPost;
     }
   }
 }

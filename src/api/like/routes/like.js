@@ -1,9 +1,19 @@
-'use strict';
-
-/**
- * like router
- */
-
-const { createCoreRouter } = require('@strapi/strapi').factories;
-
-module.exports = createCoreRouter('api::like.like');
+module.exports = {
+  routes: [
+    {
+      method: "GET",
+      path: "/likes/:id",
+      handler: "like.getlikes",
+    },
+    {
+      method: "POST",
+      path: "/posts/:id/likes",
+      handler: "like.addLike",
+    },
+    {
+      method: "DELETE",
+      path: "/likes/:id",
+      handler: "like.deleteLike",
+    },
+  ],
+};

@@ -80,11 +80,17 @@
       "type": "string"
     },
     "coverPic": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
+    },
+    "connections": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::connection.connection"
     }
   }
 }

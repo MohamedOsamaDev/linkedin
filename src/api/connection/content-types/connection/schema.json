@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "connections",
+  "info": {
+    "singularName": "connection",
+    "pluralName": "connections",
+    "displayName": "connection"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user_1": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::block-list.block-list"
+    },
+    "user_2": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::block-list.block-list"
+    }
+  }
+}

@@ -1,25 +1,30 @@
 {
   "kind": "collectionType",
-  "collectionName": "comments",
+  "collectionName": "block_lists",
   "info": {
-    "singularName": "comment",
-    "pluralName": "comments",
-    "displayName": "comment",
+    "singularName": "block-list",
+    "pluralName": "block-lists",
+    "displayName": "block_list",
     "description": ""
   },
   "options": {
-    "draftAndPublish": false
+    "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "text": {
-      "type": "text",
-      "required": true
-    },
-    "user": {
+    "from": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user"
+    },
+    "to": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "isblocked": {
+      "type": "boolean",
+      "default": true
     },
     "post": {
       "type": "relation",
