@@ -19,6 +19,18 @@ module.exports = {
               },
             ],
           },
+          populate: {
+            user_1: {
+              filters: { id: { $not: user.id } },
+              fields: ["username", "fullName"],
+              populate: { profilePic: { fields: ["url"] } },
+            },
+            user_2: {
+              filters: { id: { $not: user.id } },
+              fields: ["username", "fullName"],
+              populate: { profilePic: { fields: ["url"] } },
+            },
+          },
         }
       );
       return ctx.send({ data });
@@ -29,7 +41,7 @@ module.exports = {
   },
   GetConnectionsForSomeOne: async (ctx) => {
     try {
-      const { username, fullName } = ctx.request.params;
+      const { username, fullName } = ctx.request.query;
       if (!username && !fullName)
         return ctx.badRequest("must provide a user name or full name");
       const user = await strapi
@@ -38,14 +50,15 @@ module.exports = {
           where: {
             $or: [
               {
-                username,
+                username: username || "",
               },
               {
-                fullName,
+                fullName: fullName || "",
               },
             ],
           },
         });
+      if (!user) return ctx.badRequest("user not found");
       let { page } = ctx.request.query;
       page = page * 1 < 1 ? 1 : page;
       const data = await strapi.entityService.findMany(
@@ -63,6 +76,18 @@ module.exports = {
               },
             ],
           },
+          populate: {
+            user_1: {
+              filters: { id: { $not: user.id } },
+              fields: ["username", "fullName"],
+              populate: { profilePic: { fields: ["url"] } },
+            },
+            user_2: {
+              filters: { id: { $not: user.id } },
+              fields: ["username", "fullName"],
+              populate: { profilePic: { fields: ["url"] } },
+            },
+          },
         }
       );
       return ctx.send({ data });
@@ -73,7 +98,7 @@ module.exports = {
   },
   DeleteConnection: async (ctx) => {
     try {
-      const { id } = ctx.params;
+      const { id } = ctx.request.params;
       const { user } = ctx.state;
       const connection = await strapi.db
         .query("api::connection.connection")
@@ -82,15 +107,16 @@ module.exports = {
             $or: [
               {
                 user_1: user.id,
-                user_2: id,
+                id,
               },
               {
-                user_1: id,
+                id,
                 user_2: user.id,
               },
             ],
           },
         });
+
       if (!connection) return ctx.badRequest("Connection not found");
       await strapi.entityService.delete("api::connection.connection", id);
       return ctx.send({

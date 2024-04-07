@@ -22,7 +22,7 @@ module.exports = {
     try {
       const { user } = ctx.state;
       const { to } = ctx.request.body;
-
+      if (+to === +user.id) return ctx.badRequest("You cannot block yourself");
       const isBlockedBefore = await strapi.db
         .query("api::block-list.block-list")
         .findOne({
@@ -30,7 +30,7 @@ module.exports = {
         });
 
       if (isBlockedBefore) {
-        return ctx.badRequest({ message: "Already Blocked" });
+        return ctx.badRequest("Already Blocked");
       }
       const newBlock = await strapi.entityService.create(
         "api::block-list.block-list",

@@ -805,7 +805,7 @@ export interface ApiBlockListBlockList extends Schema.CollectionType {
     description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     from: Attribute.Relation<
@@ -819,14 +819,8 @@ export interface ApiBlockListBlockList extends Schema.CollectionType {
       'plugin::users-permissions.user'
     >;
     isblocked: Attribute.Boolean & Attribute.DefaultTo<true>;
-    post: Attribute.Relation<
-      'api::block-list.block-list',
-      'manyToOne',
-      'api::post.post'
-    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'api::block-list.block-list',
       'oneToOne',
@@ -860,11 +854,6 @@ export interface ApiCommentComment extends Schema.CollectionType {
       'oneToOne',
       'plugin::users-permissions.user'
     >;
-    post: Attribute.Relation<
-      'api::comment.comment',
-      'manyToOne',
-      'api::post.post'
-    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -897,12 +886,12 @@ export interface ApiConnectionConnection extends Schema.CollectionType {
     user_1: Attribute.Relation<
       'api::connection.connection',
       'oneToOne',
-      'api::block-list.block-list'
+      'plugin::users-permissions.user'
     >;
     user_2: Attribute.Relation<
       'api::connection.connection',
       'oneToOne',
-      'api::block-list.block-list'
+      'plugin::users-permissions.user'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1013,11 +1002,6 @@ export interface ApiPostPost extends Schema.CollectionType {
       'api::post.post',
       'oneToMany',
       'api::like.like'
-    >;
-    related_comments: Attribute.Relation<
-      'api::post.post',
-      'oneToMany',
-      'api::comment.comment'
     >;
     comments: Attribute.BigInteger &
       Attribute.SetMinMax<

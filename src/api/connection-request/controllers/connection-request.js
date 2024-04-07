@@ -127,7 +127,7 @@ module.exports = {
         "api::connection-request.connection-request",
         id
       );
-      console.log({ user_1: isExist?.from?.id, user_2: user.id });
+     
       const addToConnectionList = await strapi.entityService.create(
         "api::connection.connection",
         {
@@ -142,7 +142,7 @@ module.exports = {
   },
   deleteConnectionRequset: async (ctx) => {
     try {
-      const { id } = ctx.request.param;
+      const { id } = ctx.request.params;
       const { user } = ctx.state;
       const isExist = await strapi.db
         .query("api::connection-request.connection-request")

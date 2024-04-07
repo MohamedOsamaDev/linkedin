@@ -7,7 +7,7 @@ module.exports = {
     },
     {
       method: "GET",
-      path: "/users/:id/connections",
+      path: "/connections-for-someone",
       handler: "connection.GetConnectionsForSomeOne",
     },
     {

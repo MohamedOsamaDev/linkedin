@@ -15,12 +15,12 @@
     "user_1": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::block-list.block-list"
+      "target": "plugin::users-permissions.user"
     },
     "user_2": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::block-list.block-list"
+      "target": "plugin::users-permissions.user"
     }
   }
 }
