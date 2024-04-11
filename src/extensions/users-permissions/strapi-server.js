@@ -80,12 +80,73 @@ module.exports = (plugin) => {
       return ctx.badRequest(error);
     }
   };
+  /*******************************  remove profile pic  ********************************/
+  plugin.controllers.user.removeProfilePicture = async (ctx) => {
+    // 1 vaildate data
+    try {
+      const { user } = ctx.state;
 
+      await strapi
+        .query("plugin::users-permissions.user")
+        .update({
+          where: { id: user.id },
+          data: {
+            profilePic: null,
+          },
+        })
+        .then((res) => {
+          return (ctx.response.status = 200);
+        });
+    } catch (error) {
+      console.log("🚀 ~ plugin.controllers.user.updateMe= ~ error:", error);
+      return ctx.badRequest(error);
+    }
+  };
+  /*******************************  remove cover pic  ********************************/
+  plugin.controllers.user.removeCoverPicture = async (ctx) => {
+    // 1 vaildate data
+    try {
+      const { user } = ctx.state;
+
+      await strapi
+        .query("plugin::users-permissions.user")
+        .update({
+          where: { id: user.id },
+          data: {
+            profilePic: null,
+          },
+        })
+        .then((res) => {
+          return (ctx.response.status = 200);
+        });
+    } catch (error) {
+      console.log("🚀 ~ plugin.controllers.user.updateMe= ~ error:", error);
+      return ctx.badRequest(error);
+    }
+  };
   /*******************************  CUSTOM ROUTES  ********************************/
   plugin.routes["content-api"].routes.push({
     method: "PUT",
     path: "/user/me",
     handler: "user.updateMe",
+    config: {
+      prefix: "",
+      policies: [],
+    },
+  });
+  plugin.routes["content-api"].routes.push({
+    method: "DELETE",
+    path: "/user/me/cover-pic",
+    handler: "user.removeCoverPicture",
+    config: {
+      prefix: "",
+      policies: [],
+    },
+  });
+  plugin.routes["content-api"].routes.push({
+    method: "DELETE",
+    path: "/user/me/profile-pic",
+    handler: "user.removeProfilePicture",
     config: {
       prefix: "",
       policies: [],
