@@ -56,13 +56,19 @@ module.exports = {
             filters: {
               user: {
                 connections: {
-                  $or: [
-                    { user_1: { id: user.id } },
-                    { user_2: { id: user.id } },
-                  ],
+                  $or: [{ user_1: user.id }, { user_2: user.id }],
                 },
+                id: { $not: user.id },
               },
             },
+            populate: {
+              user: {
+                fields: ["fullName", "title", "username"],
+                populate: { profilePic: { fields: ["url"] } },
+              },
+            },
+            start: 0,
+            limit: 2,
           },
         },
       });

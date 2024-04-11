@@ -138,7 +138,11 @@ module.exports = {
           },
         }
       );
-      return ctx.send({ data: addToConnectionList });
+      return ctx.send({
+        data: {
+          message: "Connection request accepted",
+        },
+      });
     } catch (e) {
       console.log(e);
       return ctx.badRequest(e);
