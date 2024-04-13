@@ -42,7 +42,7 @@ module.exports = {
         pageSize: 15,
         populate: {
           user: {
-            fields: ["fullName", "title"],
+            fields: ["fullName", "title", "username"],
             populate: { profilePic: { fields: ["url"] } },
           },
           media: {
