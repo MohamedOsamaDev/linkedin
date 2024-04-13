@@ -60,6 +60,7 @@ module.exports = {
                 },
                 id: { $not: user.id },
               },
+              post: { id: "$post.id" },
             },
             populate: {
               user: {
