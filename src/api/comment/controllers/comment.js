@@ -33,11 +33,10 @@ module.exports = {
     const { id } = ctx.request.params;
     let page =
       ctx?.request?.query?.page < 1 ? 1 : ctx?.request?.query?.page * 1 || 1;
-    let sort = ctx?.request?.query?.sort || 'ASC'
+    let sort = ctx?.request?.query?.sort || "ASC";
     const comments = await strapi.entityService.findPage(
       "api::comment.comment",
       {
-        post: id,
         page,
         pageSize: 15,
         populate: {
@@ -48,7 +47,10 @@ module.exports = {
           media: {
             fields: ["url"],
           },
-
+          post:true
+        },
+        filters: {
+          post: id,
         },
         sort: {
           createdAt: sort,
