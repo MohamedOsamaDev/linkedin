@@ -47,7 +47,6 @@ module.exports = {
           media: {
             fields: ["url"],
           },
-          post:true
         },
         filters: {
           post: id,
