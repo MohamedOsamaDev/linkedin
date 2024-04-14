@@ -30,14 +30,14 @@ module.exports = {
     return ctx.send({ data: comment });
   },
   getComments: async (ctx) => {
-    const { postId } = ctx.params;
+    const { id } = ctx.request.params;
     let page =
       ctx?.request?.query?.page < 1 ? 1 : ctx?.request?.query?.page * 1 || 1;
 
     const comments = await strapi.entityService.findPage(
       "api::comment.comment",
       {
-        post: postId,
+        post: id,
         page,
         pageSize: 15,
         populate: {
@@ -54,7 +54,7 @@ module.exports = {
     return ctx.send({ data: comments });
   },
   updateComment: async (ctx) => {
-    const { id } = ctx.params;
+    const { id } = ctx.request.params;
     const { text } = ctx.request.body;
     const { user } = ctx.state;
     const comment = await strapi.entityService.findOne(
@@ -86,7 +86,7 @@ module.exports = {
     return ctx.send({ data: commentafterUpdate });
   },
   deleteComment: async (ctx) => {
-    const { id } = ctx.params;
+    const { id } = ctx.request.params;
     const { user } = ctx.state;
     const comment = await strapi.entityService.findOne(
       "api::comment.comment",

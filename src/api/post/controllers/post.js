@@ -53,21 +53,24 @@ module.exports = {
           },
           isLiked: { filters: { user: user.id } },
           related_comments: {
-            filters: {
-              user: {
-                connections: {
-                  $or: [{ user_1: user.id }, { user_2: user.id }],
-                },
-                id: { $not: user.id },
-              },
-              post: { id: "$post.id" },
-            },
             populate: {
               user: {
                 fields: ["fullName", "title", "username"],
                 populate: { profilePic: { fields: ["url"] } },
               },
+              post: {
+                fields: ["id"],
+              },
             },
+            filters: {
+              user: {
+                connections: {
+                  users: { id: { $in: [user.id] } },
+                },
+                id: { $not: user.id },
+              },
+            },
+
             start: 0,
             limit: 2,
           },
@@ -79,6 +82,7 @@ module.exports = {
       });
       return ctx.send({ data });
     } catch (error) {
+      console.log("🚀 ~ findAllPosts: ~ error:", error);
       return ctx.badRequest(error);
     }
   },
