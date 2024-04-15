@@ -107,13 +107,12 @@ module.exports = (plugin) => {
     // 1 vaildate data
     try {
       const { user } = ctx.state;
-
       await strapi
         .query("plugin::users-permissions.user")
         .update({
           where: { id: user.id },
           data: {
-            profilePic: null,
+            coverPic: null,
           },
         })
         .then((res) => {
