@@ -34,11 +34,16 @@ module.exports = {
     let page =
       ctx?.request?.query?.page < 1 ? 1 : ctx?.request?.query?.page * 1 || 1;
     let sort = ctx?.request?.query?.sort || "ASC";
+    let pageSize =
+      ctx?.request?.query?.pageSize < 1
+        ? 1
+        : ctx?.request?.query?.pageSize * 1 || 10;
+
     const comments = await strapi.entityService.findPage(
       "api::comment.comment",
       {
         page,
-        pageSize: 15,
+        pageSize,
         populate: {
           user: {
             fields: ["fullName", "title", "username"],
