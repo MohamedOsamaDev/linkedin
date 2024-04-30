@@ -36,8 +36,8 @@ module.exports = {
     let sort = ctx?.request?.query?.sort || "ASC";
     let pageSize =
       ctx?.request?.query?.pageSize < 1
-        ? 1
-        : ctx?.request?.query?.pageSize * 1 || 10;
+        ? 5
+        : ctx?.request?.query?.pageSize * 1 || 5;
 
     const comments = await strapi.entityService.findPage(
       "api::comment.comment",
