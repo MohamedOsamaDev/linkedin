@@ -102,10 +102,10 @@ module.exports = {
     if (comment?.user?.id !== user.id)
       return ctx.badRequest("You are not the creator of this comment");
     await strapi.entityService.delete("api::comment.comment", id);
-    await strapi.entityService.update("api::post.post", id, {
+    await strapi.entityService.update("api::post.post", comment?.post?.id, {
       data: {
-        comments:
-          +comment.post.comments - 1 < 0 ? 0 : +comment.post.comments - 1,
+        comments:+comment.post.comments - 1 < 0 ? 0 : +comment.post.comments -1
+         
       },
     });
     return ctx.send({
