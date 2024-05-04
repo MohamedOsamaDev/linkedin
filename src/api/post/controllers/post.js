@@ -39,10 +39,14 @@ module.exports = {
       const { user } = ctx.state;
       let page =
         ctx?.request?.query?.page < 1 ? 1 : ctx?.request?.query?.page * 1 || 1;
+      let pageSize =
+        ctx?.request?.query?.pageSize < 1
+          ? 10
+          : ctx?.request?.query?.pageSize * 1 || 10;
       const data = await strapi.entityService.findPage("api::post.post", {
         page,
         sort: { id: ctx?.request?.query?.sort || "desc" },
-        pageSize: 15,
+        pageSize,
         populate: {
           creator: {
             fields: ["fullName", "title", "username"],
