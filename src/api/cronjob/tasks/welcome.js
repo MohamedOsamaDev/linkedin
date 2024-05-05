@@ -9,10 +9,11 @@ module.exports = {
     "*/1 * * * *":  ({ strapi }) => {
         const refreach = async () => { 
             try {
+              console.log("🚀 ~ START REFREACH  ~  ")
                 const response = await axios.get(
                     "https://linkedin-8qzg.onrender.com/api/cronjob"
                   );
-                console.log("🚀 ~ START REFREACH  ~  ")
+                  console.log("🚀 ~ END REFREACH  ~ ")
                 } catch (error) {
                 console.log('error')
             }
