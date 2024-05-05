@@ -51,14 +51,14 @@ module.exports = {
       const { id } = ctx.request.params;
       const like = await strapi.db.query("api::like.like").findOne({
         where: {
-          id,
+         post : id,
           user: user.id,
         },
         populate: true,
       });
       if (!like) return ctx.notFound("like not found");
       await strapi.entityService.delete("api::like.like", like?.id);
-      await strapi.entityService.update("api::post.post", like?.post?.id, {
+      await strapi.entityService.update("api::post.post", id, {
         data: {
           likes: +like.post.likes - 1 < 0 ? 0 : +like.post.likes - 1,
         },
