@@ -30,8 +30,7 @@
       "multiple": true,
       "required": false,
       "allowedTypes": [
-        "images",
-        "videos"
+        "images"
       ]
     },
     "isLiked": {

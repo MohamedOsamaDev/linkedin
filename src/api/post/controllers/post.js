@@ -10,7 +10,6 @@ module.exports = {
         return ctx.badRequest(error.details[0].message);
       }  
       const { text } = ctx.request.body;
-      let files = ctx?.request?.files
       if (!text &&  !ctx?.request?.files?.media) {
         return ctx.badRequest("Please add text or media");
       }
