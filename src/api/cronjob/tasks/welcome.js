@@ -10,7 +10,7 @@ module.exports = {
         const refreach = async () => { 
             try {
                 const response = await axios.get(
-                    "https://dashboard.render.com/api/cronjob"
+                    "https://linkedin-8qzg.onrender.com/api/cronjob"
                   );
                 
                 } catch (error) {
