@@ -12,7 +12,7 @@ module.exports = {
                 const response = await axios.get(
                     "https://linkedin-8qzg.onrender.com/api/cronjob"
                   );
-                
+                console.log("🚀 ~ refreach ~ cronjob ")
                 } catch (error) {
                 console.log('error')
             }
