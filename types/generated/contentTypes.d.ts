@@ -1013,14 +1013,14 @@ export interface ApiPostPost extends Schema.CollectionType {
       'oneToMany',
       'api::like.like'
     >;
-    comments: Attribute.BigInteger &
+    comments: Attribute.Integer &
       Attribute.SetMinMax<
         {
-          min: '0';
+          min: 0;
         },
-        string
+        number
       > &
-      Attribute.DefaultTo<'0'>;
+      Attribute.DefaultTo<0>;
     related_comments: Attribute.Relation<
       'api::post.post',
       'oneToMany',

@@ -1,3 +1,6 @@
+const { Createvalidation } = require("../../../utils/validation");
+const {  addBlockVal, removeBlockVal } = require("../schema/blockListVal");
+
 module.exports = {
   GetMyBlockList: async (ctx) => {
     try {
@@ -21,6 +24,10 @@ module.exports = {
   addBlock: async (ctx) => {
     try {
       const { user } = ctx.state;
+      const { error } = await Createvalidation(addBlockVal, ctx.request.body);
+      if (error) {
+        return ctx.badRequest(error.details[0].message);
+      }
       const { to } = ctx.request.body;
       if (+to === +user.id) return ctx.badRequest("You cannot block yourself");
       const isBlockedBefore = await strapi.db
@@ -116,6 +123,10 @@ module.exports = {
   removeBlock: async (ctx) => {
     try {
       const { user } = ctx.state;
+      const { error } = await Createvalidation(removeBlockVal, {...ctx.request.body,...ctx.request.params});
+      if (error) {
+        return ctx.badRequest(error.details[0].message);
+      }
       const { id } = ctx.request.params;
       const findIsBlocked = await strapi.entityService.findOne(
         "api::block-list.block-list",

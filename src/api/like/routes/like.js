@@ -2,12 +2,12 @@ module.exports = {
   routes: [
     {
       method: "GET",
-      path: "/likes/:id",
+      path: "/posts/:id/likes",
       handler: "like.getlikes",
     },
     {
       method: "POST",
-      path: "/posts/:id/likes",
+      path: "/posts/:id/add-like",
       handler: "like.addLike",
     },
     {

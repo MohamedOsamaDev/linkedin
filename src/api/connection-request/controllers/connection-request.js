@@ -1,14 +1,22 @@
+const { handlePage } = require("../../../utils/handleQuery");
+const { Createvalidation } = require("../../../utils/validation");
+const {
+  requestForConnectionVal,
+  acceptConnectionVal,
+  deleteConnectionRequsetVal,
+} = require("../schema/connectionRequestVal");
+
 module.exports = {
   GetMyConnectionRequsetsSent: async (ctx) => {
     try {
       const { user } = ctx.state;
-      let { page } = ctx.request.query;
-      page = page * 1 < 1 ? 1 : page;
+      let page = handlePage(ctx?.request?.query?.page);
+      let pageSize = handlePage(ctx?.request?.query?.pageSize, 15);
       const data = await strapi.entityService.findPage(
         "api::connection-request.connection-request",
         {
           page,
-          pageSize: 15,
+          pageSize,
           filters: {
             from: user.id,
           },
@@ -21,9 +29,8 @@ module.exports = {
         }
       );
       return ctx.send({ data });
-    } catch (e) {
-      console.log(e);
-      return ctx.badRequest(e);
+    } catch (error) {
+      return ctx.badRequest(error);
     }
   },
   GetMyConnectionRequsetsReceived: async (ctx) => {
@@ -55,8 +62,14 @@ module.exports = {
   },
   requestForConnection: async (ctx) => {
     try {
+      const { error } = await Createvalidation(
+        requestForConnectionVal,
+        ctx.request.body
+      );
+      if (error) {
+        return ctx.badRequest(error.details[0].message);
+      }
       const { to } = ctx.request.body;
-      console.log("🚀 ~ requestForConnection: ~ to:", to);
       const { user } = ctx.state;
 
       const isBlocked = await strapi.db
@@ -106,6 +119,13 @@ module.exports = {
   },
   acceptConnection: async (ctx) => {
     try {
+      const { error } = await Createvalidation(
+        acceptConnectionVal,
+        ctx.request.params
+      );
+      if (error) {
+        return ctx.badRequest(error.details[0].message);
+      }
       const { id } = ctx.request.params;
       const { user } = ctx.state;
       const isExist = await strapi.db
@@ -150,8 +170,16 @@ module.exports = {
   },
   deleteConnectionRequset: async (ctx) => {
     try {
+      const { error } = await Createvalidation(
+        deleteConnectionRequsetVal,
+        ctx.request.params
+      );
+      if (error) {
+        return ctx.badRequest(error.details[0].message);
+      }
       const { id } = ctx.request.params;
       const { user } = ctx.state;
+
       const isExist = await strapi.db
         .query("api::connection-request.connection-request")
         .findOne({

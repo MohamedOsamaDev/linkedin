@@ -1,10 +1,23 @@
+const { handlePage, handleSort } = require("../../../utils/handleQuery");
+const { Createvalidation } = require("../../../utils/validation");
+const { createpostVal, findOnePostVal, updatePostVal, deletePostVal } = require("../schema/postVal");
+
 module.exports = {
   createpost: async (ctx) => {
     try {
-      const { user } = ctx.state;
+      const { error } = await Createvalidation(createpostVal, ctx.request.body);
+      if (error) {
+        return ctx.badRequest(error.details[0].message);
+      }  
       const { text } = ctx.request.body;
+      let files = ctx?.request?.files
+      console.log("🚀 ~ createpost: ~ files:", files)
+      if (!text && Object.keys(files).length === 0) {
+        return ctx.badRequest("Please add text or media");
+      }
+      const { user } = ctx.state;
       let uploadedFile = [];
-      if (ctx?.request?.files) {
+      if (Object.keys(files).length !== 0) {
         const { media } = ctx?.request?.files;
         uploadedFile = await strapi.service("plugin::upload.upload").upload({
           data: {
@@ -31,21 +44,18 @@ module.exports = {
       });
       return ctx.send({ data: post });
     } catch (error) {
+      console.log("🚀 ~ createpost: ~ error:", error)
       return ctx.badRequest(error);
     }
   },
   findAllPosts: async (ctx) => {
     try {
       const { user } = ctx.state;
-      let page =
-        ctx?.request?.query?.page < 1 ? 1 : ctx?.request?.query?.page * 1 || 1;
-      let pageSize =
-        ctx?.request?.query?.pageSize < 1
-          ? 10
-          : ctx?.request?.query?.pageSize * 1 || 10;
+      let page = handlePage(ctx?.request?.query?.page)
+      let pageSize = handlePage(ctx?.request?.query?.pageSiz,10)
       const data = await strapi.entityService.findPage("api::post.post", {
         page,
-        sort: { id: ctx?.request?.query?.sort || "desc" },
+        sort: { id: handleSort(ctx?.request?.query?.sort) },
         pageSize,
         populate: {
           creator: {
@@ -92,7 +102,11 @@ module.exports = {
   },
   findOnePost: async (ctx) => {
     try {
-      const { id } = ctx.params;
+      const { error } = await Createvalidation(findOnePostVal, {id:ctx?.request?.params?.id});
+      if (error) {
+        return ctx.badRequest(error.details[0].message);
+      }  
+      const { id } = ctx.request.params;
       const data = await strapi.entityService.findOne("api::post.post", id, {
         populate: {
           creator: {
@@ -104,6 +118,9 @@ module.exports = {
           },
         },
       });
+      if (!data) {
+        return ctx.badRequest("Post not found");
+      }
       return ctx.send({ data });
     } catch (error) {
       return ctx.badRequest(error);
@@ -111,14 +128,29 @@ module.exports = {
   },
   updatePost: async (ctx) => {
     try {
-      const { id } = ctx.params;
+      console.log("🚀 ~ findOnePost: ~ ctx.request.params:", ctx.request.params)
+      const { error } = await Createvalidation(updatePostVal, {...ctx.request.params, ...ctx.request.body});
+      if (error) {
+        return ctx.badRequest(error.details[0].message);
+      }  
+      const { id } = ctx.request.params;
       const { text } = ctx.request.body;
-      const post = await ctx.entityService.findOne("api::post.post", id);
+      const post = await strapi.entityService.findOne("api::post.post", id,{
+        populate: {
+          creator: {
+            fields: ["fullName", "title", "username"],
+            populate: { profilePic: { fields: ["url"] } },
+          },
+          media: {
+            fields: ["url", "mime", "provider_metadata"],
+          },
+        },
+      });
       if (!post) return ctx.badRequest("Post not found");
       if (post.creator.id !== ctx.state.user.id)
         return ctx.BadRequest("Invalid post");
       let data = { text };
-      if (ctx.request.files) {
+      if (ctx?.request?.files?.media) {
         const { media } = ctx.request.files;
         const uploadedFile = await strapi
           .service("plugin::upload.upload")
@@ -156,8 +188,12 @@ module.exports = {
   },
   deletePost: async (ctx) => {
     try {
+      const { error } = await Createvalidation(deletePostVal, {...ctx.request.params, ...ctx.request.body});
+      if (error) {
+        return ctx.badRequest(error.details[0].message);
+      }  
       const { user } = ctx.state;
-      const { id } = ctx.params;
+      const { id } = ctx.request.params;
       const post = await strapi.entityService.findOne("api::post.post", id, {
         populate: {
           creator: {
