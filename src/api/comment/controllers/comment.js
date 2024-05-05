@@ -1,6 +1,13 @@
+const { Createvalidation } = require("../../../utils/validation");
+const { addCommentVal, updateCommentVal, deleteCommentVal } = require("../schama/commentVal");
+
 module.exports = {
   addComment: async (ctx) => {
     const { user } = ctx.state;
+    const { error } = await Createvalidation(addCommentVal, ctx.request.body);
+    if (error) {
+      return ctx.badRequest(error.details[0].message);
+    }
     const { text, postId } = ctx.request.body;
     const post = await strapi.entityService.findOne("api::post.post", postId);
     if (!post) return ctx.badRequest("Post not found");
@@ -31,9 +38,11 @@ module.exports = {
   },
   getComments: async (ctx) => {
     const { id } = ctx.request.params;
+
     let page =
       ctx?.request?.query?.page < 1 ? 1 : ctx?.request?.query?.page * 1 || 1;
     let sort = ctx?.request?.query?.sort || "ASC";
+
     let pageSize =
       ctx?.request?.query?.pageSize < 1
         ? 5
@@ -64,6 +73,13 @@ module.exports = {
     return ctx.send({ data: comments });
   },
   updateComment: async (ctx) => {
+    try {
+      const { error } = await Createvalidation(updateCommentVal, {id:ctx.request.params.id,...ctx.request.body});
+    if (error) {
+      return ctx.badRequest(error.details[0].message);
+    }
+
+
     const { id } = ctx.request.params;
     const { text } = ctx.request.body;
     const { user } = ctx.state;
@@ -94,8 +110,15 @@ module.exports = {
       }
     );
     return ctx.send({ data: commentafterUpdate });
+    } catch (error) {
+      return ctx.badRequest(error); 
+    }
   },
   deleteComment: async (ctx) => {
+    const { error } = await Createvalidation(deleteCommentVal, {...ctx.request.params});
+    if (error) {
+      return ctx.badRequest(error.details[0].message);
+    }
     const { id } = ctx.request.params;
     const { user } = ctx.state;
     const comment = await strapi.entityService.findOne(

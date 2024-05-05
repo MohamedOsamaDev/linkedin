@@ -16,6 +16,7 @@
     "@strapi/provider-upload-cloudinary": "^4.21.0",
     "@strapi/strapi": "4.20.5",
     "better-sqlite3": "8.6.0",
+    "joi": "^17.13.1",
     "multer": "^1.4.5-lts.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",

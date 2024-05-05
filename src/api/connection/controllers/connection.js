@@ -1,3 +1,6 @@
+const { Createvalidation } = require("../../../utils/validation");
+const { GetConnectionsForSomeOneVal, DeleteConnectionVal } = require("../schema/connectionVal");
+
 module.exports = {
   GetMyConnections: async (ctx) => {
     try {
@@ -41,19 +44,23 @@ module.exports = {
   },
   GetConnectionsForSomeOne: async (ctx) => {
     try {
+      
+      
+      const { error } = await Createvalidation(GetConnectionsForSomeOneVal, ctx.request.query);
+      if (error) {
+        return ctx.badRequest(error.details[0].message);
+      }
       const { username, fullName } = ctx.request.query;
-      if (!username && !fullName)
-        return ctx.badRequest("must provide a user name or full name");
       const user = await strapi
         .query("plugin::users-permissions.user")
         .findOne({
           where: {
             $or: [
               {
-                username: username || "",
+                username: username ,
               },
               {
-                fullName: fullName || "",
+                fullName: fullName ,
               },
             ],
           },
@@ -98,6 +105,10 @@ module.exports = {
   },
   DeleteConnection: async (ctx) => {
     try {
+      const { error } = await Createvalidation(DeleteConnectionVal, ctx.request.params);
+      if (error) {
+        return ctx.badRequest(error.details[0].message);
+      }
       const { id } = ctx.request.params;
       const { user } = ctx.state;
       const connection = await strapi.db

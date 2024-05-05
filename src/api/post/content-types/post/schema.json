@@ -27,7 +27,7 @@
     },
     "media": {
       "type": "media",
-      "multiple": false,
+      "multiple": true,
       "required": false,
       "allowedTypes": [
         "images",
@@ -41,9 +41,9 @@
       "mappedBy": "post"
     },
     "comments": {
-      "type": "biginteger",
-      "min": "0",
-      "default": "0"
+      "type": "integer",
+      "min": 0,
+      "default": 0
     },
     "related_comments": {
       "type": "relation",

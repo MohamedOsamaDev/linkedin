@@ -1,8 +1,15 @@
+const { Createvalidation } = require("../../utils/validation");
+const { updateMeval } = require("./schema/userVal");
+
 module.exports = (plugin) => {
   /*******************************  CUSTOM CONTROLERS  ********************************/
   plugin.controllers.user.updateMe = async (ctx) => {
-    // 1 vaildate data
     try {
+      // 1 vaildate data
+      const { error } = await Createvalidation(updateMeval, { ...ctx.request.body});
+      if (error) {
+        return ctx.badRequest(error.details[0].message);
+      }  
       const { fullName, title, email, username } = ctx.request.body;
       const { user } = ctx.state;
       let data = { fullName, title, email, username };
@@ -41,7 +48,7 @@ module.exports = (plugin) => {
         }
       }
       // 4 update data if all things is alright
-      if (ctx.request.files) {
+      if (!ctx.request.files.length) {
         const { coverPic, profilePic } = ctx.request.files;
         if (coverPic) {
           const coverPicupload = await strapi
