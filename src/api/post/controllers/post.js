@@ -11,13 +11,12 @@ module.exports = {
       }  
       const { text } = ctx.request.body;
       let files = ctx?.request?.files
-      console.log("🚀 ~ createpost: ~ files:", files)
-      if (!text && Object.keys(files).length === 0) {
+      if (!text &&  !ctx?.request?.files?.media) {
         return ctx.badRequest("Please add text or media");
       }
       const { user } = ctx.state;
       let uploadedFile = [];
-      if (Object.keys(files).length !== 0) {
+      if (ctx?.request?.files?.media) {
         const { media } = ctx?.request?.files;
         uploadedFile = await strapi.service("plugin::upload.upload").upload({
           data: {

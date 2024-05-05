@@ -5,7 +5,9 @@ const { addLikeVal, deleteLikeVal, getlikesVal } = require("../schema/likeVal");
 module.exports = {
   addLike: async (ctx) => {
     try {
-      const { error } = await Createvalidation(addLikeVal, { id: ctx?.request?.params?.id });
+      const { error } = await Createvalidation(addLikeVal, {
+        id: ctx?.request?.params?.id,
+      });
       if (error) {
         return ctx.badRequest(error.details[0].message);
       }
@@ -22,8 +24,7 @@ module.exports = {
           user: user.id,
           post: id,
         },
-
-      },);
+      });
       await strapi.entityService.update("api::post.post", post.id, {
         data: {
           likes: +post.likes + 1,
@@ -31,8 +32,8 @@ module.exports = {
       });
       return ctx.send({
         data: {
-          message: 'success',
-        }
+          message: "success",
+        },
       });
     } catch (error) {
       return ctx.badRequest(error);
@@ -40,7 +41,9 @@ module.exports = {
   },
   deleteLike: async (ctx) => {
     try {
-      const { error } = await Createvalidation(deleteLikeVal, ctx.request.params);
+      const { error } = await Createvalidation(deleteLikeVal, {
+        id: ctx?.request?.params?.id,
+      });
       if (error) {
         return ctx.badRequest(error.details[0].message);
       }
@@ -67,12 +70,14 @@ module.exports = {
   },
   getlikes: async (ctx) => {
     try {
-      const { error } = await Createvalidation(getlikesVal, { id: ctx?.request?.params?.id });
+      const { error } = await Createvalidation(getlikesVal, {
+        id: ctx?.request?.params?.id,
+      });
       if (error) {
         return ctx.badRequest(error.details[0].message);
       }
       const { id } = ctx.params;
-      let page = handlePage(ctx?.request?.query?.page)
+      let page = handlePage(ctx?.request?.query?.page);
 
       const likes = await strapi.entityService.findPage("api::like.like", {
         page,
