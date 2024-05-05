@@ -6,7 +6,7 @@ module.exports = {
      * Every monday at 1am.
      */
   
-    "*/5 * * * *":  ({ strapi }) => {
+    "*/1 * * * *":  ({ strapi }) => {
         const refreach = async () => { 
             try {
                 const response = await axios.get(
