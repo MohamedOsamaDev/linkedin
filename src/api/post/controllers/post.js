@@ -50,7 +50,7 @@ module.exports = {
     try {
       const { user } = ctx.state;
       let page = handlePage(ctx?.request?.query?.page)
-      let pageSize = handlePage(ctx?.request?.query?.pageSiz,10)
+      let pageSize = handlePage(ctx?.request?.query?.pagesize,10)
       const data = await strapi.entityService.findPage("api::post.post", {
         page,
         sort: { id: handleSort(ctx?.request?.query?.sort) },
