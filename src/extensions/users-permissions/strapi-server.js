@@ -47,38 +47,35 @@ module.exports = (plugin) => {
           return ctx.badRequest(errormsg);
         }
       }
-      // 4 update data if all things is alright
-      if (ctx?.request?.files?.coverPic || ctx?.request?.files?.profilePic) {
-        const { coverPic, profilePic } = ctx.request.files;
-        if (coverPic) {
-          const coverPicupload = await strapi
-            .service("plugin::upload.upload")
-            .upload({
-              data: {
-                fileInfo: { caption: "", alternativeText: "", name: "" },
-              },
-              files: coverPic,
-            });
-            ctx.request.body.coverPic = coverPicupload;
-        }
-        if (profilePic) {
-          const profilePicupload = await strapi
-            .service("plugin::upload.upload")
-            .upload({
-              data: {
-                fileInfo: { caption: "", alternativeText: "", name: "" },
-              },
-              files: profilePic,
-            });
-            ctx.request.body.profilePic = profilePicupload;
-        }
+    
+      if (ctx?.request?.files?.coverPic) {
+        const coverPicupload = await strapi
+          .service("plugin::upload.upload")
+          .upload({
+            data: {
+              fileInfo: { caption: "", alternativeText: "", name: "" },
+            },
+            files: ctx.request.files.coverPic,
+          });
+        ctx.request.body.coverPic = coverPicupload;
+      }
+      if (ctx?.request?.files?.profilePic) {
+        const profilePicupload = await strapi
+          .service("plugin::upload.upload")
+          .upload({
+            data: {
+              fileInfo: { caption: "", alternativeText: "", name: "" },
+            },
+            files: ctx.request.files.profilePic,
+          });
+        ctx.request.body.profilePic = profilePicupload;
       }
       if (Object.keys(ctx.request.body)?.length === 0)
         return ctx.badRequest("no data to update");
-
+  // 4 update data if all things is alright
       await strapi.query("plugin::users-permissions.user").update({
         where: { id: user.id },
-        data:ctx.request.body,
+        data: ctx.request.body,
       });
       return ctx.send({
         message: "success",
