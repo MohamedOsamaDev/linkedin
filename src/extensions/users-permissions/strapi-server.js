@@ -59,7 +59,7 @@ module.exports = (plugin) => {
               },
               files: coverPic,
             });
-          data.coverPic = coverPicupload;
+            ctx.request.body.coverPic = coverPicupload;
         }
         if (profilePic) {
           const profilePicupload = await strapi
@@ -70,7 +70,7 @@ module.exports = (plugin) => {
               },
               files: profilePic,
             });
-          data.profilePic = profilePicupload;
+            ctx.request.body.profilePic = profilePicupload;
         }
       }
       if (Object.keys(ctx.request.body)?.length === 0)
