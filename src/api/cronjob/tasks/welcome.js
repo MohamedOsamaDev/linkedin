@@ -3,10 +3,9 @@ const { default: axios } = require("axios");
 module.exports = {
     /**
      * Simple example.
-     * Every monday at 1am.
      */
   
-    "*/1 * * * *":  ({ strapi }) => {
+    "*/1 * * * *": async ({ strapi }) => {
         const refreach = async () => { 
             try {
               console.log("🚀 ~ START REFREACH  ~  ")

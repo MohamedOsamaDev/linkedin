@@ -6,7 +6,7 @@ module.exports = (plugin) => {
   plugin.controllers.user.updateMe = async (ctx) => {
     try {
       // 1 vaildate data
-      const { error } = await Createvalidation(updateMeval, { ...ctx.request.body});
+      const { error } = await Createvalidation(updateMeval, ctx.request.body);
       if (error) {
         return ctx.badRequest(error.details[0].message);
       }  
@@ -79,9 +79,9 @@ module.exports = (plugin) => {
           where: { id: user.id },
           data,
         })
-        .then((res) => {
-          return (ctx.response.status = 200);
-        });
+       return ctx.send({
+        message:'success',
+       })
     } catch (error) {
       console.log("🚀 ~ plugin.controllers.user.updateMe= ~ error:", error);
       return ctx.badRequest(error);

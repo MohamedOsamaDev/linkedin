@@ -14,25 +14,35 @@
 					"name": "sign up",
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "47d6409b46859f81fb867a6e7fd107a572c37215641bda185a29c0b053630dcea811668579f3221a0564655599975f2c7542d8f5820041768638579ba898d7bf711c893688660557a497e203fc860fead3ff63a37803a86218d01b16766657d1c4ddc79e2d4f705a138645eb66e0dab567efbb42da259c66d9b256dddc00238b",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"mohamedosama10085@gmail.com\",\r\n    \"password\":\"c1e5v1cr5v\",\r\n    \"username\":\"mohamedosama\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "mohamedosama",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "mohamedosama10085@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "dwe15fwe15verRE6",
+									"type": "text"
+								},
+								{
+									"key": "profilePic",
+									"type": "file",
+									"src": "/C:/Users/Mohamed Osama/Downloads/logos/logo (2).jpg",
+									"disabled": true
 								}
-							}
+							]
 						},
 						"url": {
 							"raw": "http://localhost:1337/api/auth/local/register",
@@ -54,8 +64,52 @@
 				{
 					"name": "update profile",
 					"request": {
-						"method": "GET",
-						"header": []
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzE1MDA0MzUzLCJleHAiOjE3MTc1OTYzNTN9.F_G7HAScz7b34t0JyrgXbZCFl0vth6tht1nwYzyPlKg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "profilePic",
+									"type": "file",
+									"src": "/C:/Users/Mohamed Osama/Downloads/logos/logo (1).jpg",
+									"disabled": true
+								},
+								{
+									"key": "title",
+									"value": "ceo",
+									"type": "text"
+								},
+								{
+									"key": "fullName",
+									"value": "mohamed osama",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:1337/api/user/me",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1337",
+							"path": [
+								"api",
+								"user",
+								"me"
+							]
+						}
 					},
 					"response": []
 				},
@@ -66,7 +120,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"identifier\": \"mohamedosama10085@gmail.com\",\r\n    \"password\": \"c1e5v1cr5v\"\r\n}",
+							"raw": "{\r\n    \"identifier\": \"mohamedosama10085@gmail.com\",\r\n    \"password\": \"dwe15fwe15verRE6\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -88,6 +142,37 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "get my profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzE0ODQ4NDM3LCJleHAiOjE3MTc0NDA0Mzd9._vVQHFYfAjF0_jhFyEpvyRwdgty8wjJzNiI8HfgLG4w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:1337/api/users/me",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1337",
+							"path": [
+								"api",
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -102,7 +187,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzEwODEzMjUxLCJleHAiOjE3MTM0MDUyNTF9.v8BlZbB77PWmlYJ-X0i2XmhxhZJ_neMAmiA3xURBGbk",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzE1MDA0MzUzLCJleHAiOjE3MTc1OTYzNTN9.F_G7HAScz7b34t0JyrgXbZCFl0vth6tht1nwYzyPlKg",
 									"type": "string"
 								}
 							]
@@ -115,15 +200,18 @@
 								{
 									"key": "media",
 									"type": "file",
-									"src": [
-										"/C:/Users/Mohamed Osama/OneDrive/Pictures/picsart_23-02-08_06-53-40-508.png",
-										"/C:/Users/Mohamed Osama/OneDrive/Pictures/screencapture-preview-colorlib-2023-03-05-11_58_32.png"
-									]
+									"src": "/C:/Users/Mohamed Osama/Downloads/Screenshot 2024-05-05 044423.png",
+									"disabled": true
+								},
+								{
+									"key": "text",
+									"value": "vfdver",
+									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://localhost:1337/api/createpost",
+							"raw": "http://localhost:1337/api/posts",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -131,7 +219,7 @@
 							"port": "1337",
 							"path": [
 								"api",
-								"createpost"
+								"posts"
 							]
 						}
 					},
@@ -145,7 +233,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzEyNTA0NTM2LCJleHAiOjE3MTUwOTY1MzZ9.aytib8nn2I8WQax9paLaHfELCwwkukxxfDiRX2FGnRA",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzE0ODQ4NjIxLCJleHAiOjE3MTc0NDA2MjF9.rGbp5ddWJWm9VhCNkyWepFo2w-kzBK5YJQ8J0EI0EPI",
 									"type": "string"
 								}
 							]
@@ -166,6 +254,109 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "update post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzE0ODQ4NjIxLCJleHAiOjE3MTc0NDA2MjF9.rGbp5ddWJWm9VhCNkyWepFo2w-kzBK5YJQ8J0EI0EPI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "text",
+									"value": "csdvs",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:1337/api/posts/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1337",
+							"path": [
+								"api",
+								"posts",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleta post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzE0ODQ4NjIxLCJleHAiOjE3MTc0NDA2MjF9.rGbp5ddWJWm9VhCNkyWepFo2w-kzBK5YJQ8J0EI0EPI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:1337/api/posts/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1337",
+							"path": [
+								"api",
+								"posts",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find one Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzE0ODQ4NjIxLCJleHAiOjE3MTc0NDA2MjF9.rGbp5ddWJWm9VhCNkyWepFo2w-kzBK5YJQ8J0EI0EPI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:1337/api/posts/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1337",
+							"path": [
+								"api",
+								"posts",
+								"4"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -180,7 +371,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzEwODEzMjUxLCJleHAiOjE3MTM0MDUyNTF9.v8BlZbB77PWmlYJ-X0i2XmhxhZJ_neMAmiA3xURBGbk",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzE0ODQ4NjIxLCJleHAiOjE3MTc0NDA2MjF9.rGbp5ddWJWm9VhCNkyWepFo2w-kzBK5YJQ8J0EI0EPI",
 									"type": "string"
 								}
 							]
@@ -189,7 +380,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"postId\":\"1\"\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -197,7 +388,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:1337/api/add-like",
+							"raw": "http://localhost:1337/api/posts/4/add-like",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -205,6 +396,8 @@
 							"port": "1337",
 							"path": [
 								"api",
+								"posts",
+								"4",
 								"add-like"
 							]
 						}
@@ -219,7 +412,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzEwODEzMjUxLCJleHAiOjE3MTM0MDUyNTF9.v8BlZbB77PWmlYJ-X0i2XmhxhZJ_neMAmiA3xURBGbk",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzE0ODQ4NjIxLCJleHAiOjE3MTc0NDA2MjF9.rGbp5ddWJWm9VhCNkyWepFo2w-kzBK5YJQ8J0EI0EPI",
 									"type": "string"
 								}
 							]
@@ -236,7 +429,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:1337/api/delete-like/3",
+							"raw": "http://localhost:1337/api/likes/5",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -244,8 +437,40 @@
 							"port": "1337",
 							"path": [
 								"api",
-								"delete-like",
-								"3"
+								"likes",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get likes for specific post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzE0ODQ4NjIxLCJleHAiOjE3MTc0NDA2MjF9.rGbp5ddWJWm9VhCNkyWepFo2w-kzBK5YJQ8J0EI0EPI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:1337/api/posts/4/likes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1337",
+							"path": [
+								"api",
+								"posts",
+								"4",
+								"likes"
 							]
 						}
 					},
@@ -294,6 +519,100 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "get comments",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzE0ODQ4NjIxLCJleHAiOjE3MTc0NDA2MjF9.rGbp5ddWJWm9VhCNkyWepFo2w-kzBK5YJQ8J0EI0EPI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:1337/api/posts/1/comments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1337",
+							"path": [
+								"api",
+								"posts",
+								"1",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzE0ODQ4NjIxLCJleHAiOjE3MTc0NDA2MjF9.rGbp5ddWJWm9VhCNkyWepFo2w-kzBK5YJQ8J0EI0EPI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:1337/api/comments/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1337",
+							"path": [
+								"api",
+								"comments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzE0ODQ4NjIxLCJleHAiOjE3MTc0NDA2MjF9.rGbp5ddWJWm9VhCNkyWepFo2w-kzBK5YJQ8J0EI0EPI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:1337/api/comments/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1337",
+							"path": [
+								"api",
+								"comments",
+								"1"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -308,7 +627,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzEyNDk3OTAzLCJleHAiOjE3MTUwODk5MDN9.B0AnB-Wo2V1SjREQxGUvXvSr2Ux2V0545f1JM8aOn8M",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzE0ODQ4NjIxLCJleHAiOjE3MTc0NDA2MjF9.rGbp5ddWJWm9VhCNkyWepFo2w-kzBK5YJQ8J0EI0EPI",
 									"type": "string"
 								}
 							]
@@ -338,7 +657,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzEyNDk4Njg1LCJleHAiOjE3MTUwOTA2ODV9.fEXgGX66A8McdZyE5H8ofY3NZM3mDVxCJohT2ywWC0g",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzE0ODQ4NjIxLCJleHAiOjE3MTc0NDA2MjF9.rGbp5ddWJWm9VhCNkyWepFo2w-kzBK5YJQ8J0EI0EPI",
 									"type": "string"
 								}
 							]
@@ -368,7 +687,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzEyNDk3OTAzLCJleHAiOjE3MTUwODk5MDN9.B0AnB-Wo2V1SjREQxGUvXvSr2Ux2V0545f1JM8aOn8M",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzE0ODQ4NjIxLCJleHAiOjE3MTc0NDA2MjF9.rGbp5ddWJWm9VhCNkyWepFo2w-kzBK5YJQ8J0EI0EPI",
 									"type": "string"
 								}
 							]
@@ -669,6 +988,14 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
 		}
 	]
 }
