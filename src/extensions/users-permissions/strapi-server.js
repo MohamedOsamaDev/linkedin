@@ -9,10 +9,10 @@ module.exports = (plugin) => {
       const { error } = await Createvalidation(updateMeval, ctx.request.body);
       if (error) {
         return ctx.badRequest(error.details[0].message);
-      }  
-      const { fullName, title, email, username } = ctx.request.body;
+      }
+      const { email, username } = ctx.request.body;
       const { user } = ctx.state;
-      let data = { fullName, title, email, username };
+
       if (email || username) {
         // 2 check unique feilds
         const checkFeilds = await strapi
@@ -48,7 +48,7 @@ module.exports = (plugin) => {
         }
       }
       // 4 update data if all things is alright
-      if (!ctx.request.files.length) {
+      if (ctx?.request?.files?.coverPic || ctx?.request?.files?.profilePic) {
         const { coverPic, profilePic } = ctx.request.files;
         if (coverPic) {
           const coverPicupload = await strapi
@@ -73,15 +73,16 @@ module.exports = (plugin) => {
           data.profilePic = profilePicupload;
         }
       }
-      await strapi
-        .query("plugin::users-permissions.user")
-        .update({
-          where: { id: user.id },
-          data,
-        })
-       return ctx.send({
-        message:'success',
-       })
+      if (Object.keys(ctx.request.body)?.length === 0)
+        return ctx.badRequest("no data to update");
+
+      await strapi.query("plugin::users-permissions.user").update({
+        where: { id: user.id },
+        data:ctx.request.body,
+      });
+      return ctx.send({
+        message: "success",
+      });
     } catch (error) {
       console.log("🚀 ~ plugin.controllers.user.updateMe= ~ error:", error);
       return ctx.badRequest(error);
